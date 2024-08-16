@@ -339,3 +339,47 @@ The Real-Time Collaborative Document Editing System requires a robust communicat
 **Sequence Diagram**
 
 ![Screenshot 2024-08-16 142548](https://github.com/user-attachments/assets/453f0655-7a17-428f-8c4c-30fdf1890c57)
+
+### **High-Level Approach to Rendering Changes from Multiple Users**
+
+**1\. Overview:** In a collaborative document editing application, multiple users may make changes simultaneously. The client-side application needs to efficiently handle and display these changes in real-time so that all users see an updated and consistent version of the document.
+
+**2\. Key Components:**
+
+**2.1. Real-Time Updates:**
+
+* **WebSocket Connection:** The application uses WebSocket to receive real-time updates from the server whenever other users make changes.
+
+**2.2. Handling Changes:**
+
+* **Change Processing:** When an update arrives, it needs to be processed and integrated into the local version of the document.
+
+**2.3. Updating the User Interface:**
+
+* **Rendering Changes:** The local document state is updated to include the new changes, and the user interface is refreshed to reflect these updates.
+
+**3\. Step-by-Step Process:**
+
+**3.1. Receive Updates:**
+
+* **WebSocket Listener:** The application listens for updates from the server via WebSocket. When a change is made by another user, the server sends a message with details about the change (e.g., text added or removed).
+
+**3.2. Apply Changes:**
+
+* **Update Handling:** Once the update is received, the application applies these changes to the local document. This might involve inserting text at a specific position or deleting existing text.
+
+**3.3. Refresh the View:**
+
+* **Re-rendering:** After applying the changes, the application updates the display so that the user sees the most current version of the document.
+
+**4\. Example:**
+
+* **Receiving an Update:**  
+  * User A types “Hello” at the beginning of the document.  
+  * The server sends an update message to all users: “Insert ‘Hello’ at position 0.”  
+* **Applying the Update:**  
+  * The local document on User B’s screen is updated to insert “Hello” at the start.  
+* **Refreshing the Display:**  
+  * The user interface (e.g., the text area) is refreshed to show the updated document with “Hello” now visible.
+
+ ![Screenshot 2024-08-16 143110](https://github.com/user-attachments/assets/574e65fe-1990-4c49-8a5a-69044b943a04)
