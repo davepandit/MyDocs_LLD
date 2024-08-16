@@ -383,3 +383,80 @@ The Real-Time Collaborative Document Editing System requires a robust communicat
   * The user interface (e.g., the text area) is refreshed to show the updated document with “Hello” now visible.
 
  ![Screenshot 2024-08-16 143110](https://github.com/user-attachments/assets/574e65fe-1990-4c49-8a5a-69044b943a04)
+
+### **Algorithm Implementation for Consistency**
+
+**1\. Overview:** In a real-time collaborative document editing system, ensuring consistency among simultaneous users is critical. The system must handle concurrent operations (e.g., inserts, deletes) and merge changes without causing conflicts. The following algorithm outlines how to achieve this using Operational Transformation (OT) or Conflict-Free Replicated Data Types (CRDTs).
+
+**2\. Key Components:**
+
+* **Operation Queue:** A queue to hold incoming operations from users before they are processed and applied.  
+* **Operation Transformation (OT):** An algorithm to transform operations to ensure consistency and resolve conflicts.  
+* **Conflict Resolver:** A component to handle conflicts and ensure that all users see the same final document state.
+
+**3\. Algorithm Steps:**
+
+**3.1. Operation Representation:** Each operation (insert, delete) is represented as a data structure containing:
+
+* **Type:** The type of operation (insert, delete).  
+* **Position:** The position in the document where the operation is applied.  
+* **Content:** The content being inserted or deleted.  
+* **Timestamp:** A timestamp or logical clock to order operations.
+
+**3.2. Operation Transformation:** When a user performs an operation, it is broadcasted to all other users. The OT algorithm transforms operations based on the context of concurrent operations. The transformation process involves:
+
+* **Receiving Operations:** The system receives operations from different users.  
+* **Transforming Operations:** Operations are transformed to account for the changes made by other users. For example, if two users insert text at the same position, the OT algorithm determines how to adjust the positions of these inserts.  
+* **Applying Transformed Operations:** The transformed operations are applied to the local document, ensuring that the final document state is consistent with all users.
+
+**3.3. Conflict Resolution:** Conflicts arise when simultaneous operations affect the same document region. The conflict resolution process involves:
+
+* **Detecting Conflicts:** The system identifies conflicting operations (e.g., two users deleting the same text).  
+* **Resolving Conflicts:** The conflict resolver applies predefined rules or algorithms to resolve conflicts. For instance, last-write-wins or merging changes based on operation timestamps.  
+* **Broadcasting Resolutions:** Resolved changes are broadcasted to all users to update their document views.
+
+Example Algorithm (Operational Transformation): 
+```
+class Operation {  
+public:  
+    string type;        // "insert" or "delete"  
+    int position;       // Position in the document  
+    string content;     // Content to be inserted or deleted  
+    int timestamp;      // Logical timestamp for ordering
+
+    // Constructor  
+    Operation(string t, int p, string c, int ts) : type(t), position(p), content(c), timestamp(ts) {}  
+};
+
+class OTAlgorithm {  
+public:  
+    void transform(Operation &op1, Operation &op2) {  
+        // Example transformation logic  
+        if (op1.position < op2.position) {  
+            if (op1.type == "insert" && op2.type == "insert") {  
+                // Adjust position of op2  
+                op2.position += op1.content.size();  
+            } else if (op1.type == "delete" && op2.type == "insert") {  
+                // Adjust position of op2  
+                op2.position -= min(op1.content.size(), op2.position);  
+            }  
+        } else if (op1.position == op2.position) {  
+            if (op1.type == "insert" && op2.type == "delete") {  
+                // Handle simultaneous insert and delete at the same position  
+                // Example: prefer insert or delete based on timestamp  
+                if (op1.timestamp > op2.timestamp) {  
+                    // Prefer op1 (insert)  
+                } else {  
+                    // Prefer op2 (delete)  
+                }  
+            }  
+        }  
+    }
+
+    void applyOperation(Operation \&op) {  
+        // Apply operation to the document  
+        // Example: Insert content or delete content at the specified position  
+    }  
+};
+```
+
