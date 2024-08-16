@@ -310,3 +310,32 @@ The Real-Time Collaborative Document Editing System requires a robust communicat
 **Class Diagram**:
 
 ![Screenshot 2024-08-16 142015](https://github.com/user-attachments/assets/36503718-6a08-4546-b832-3b5599b64c30)
+
+### **How Multi-Threading Can Improve a Document Editing System**
+
+**1\. Enhanced Performance:**
+
+* **Parallel Processing:** Multi-threading enables parallel processing of different tasks. For instance, while one thread handles user input, another can handle document rendering or network communication. This leads to smoother and faster document editing.  
+* **Efficient Resource Utilization:** By utilizing multiple CPU cores, multi-threading ensures that the system makes optimal use of available resources, reducing the time needed to process complex operations.
+
+**2\. Improved Responsiveness:**
+
+* **Non-Blocking UI:** Multi-threading allows for non-blocking user interfaces. For example, a separate thread can handle background tasks like saving changes or syncing with the server, preventing the UI from freezing or becoming unresponsive.  
+* **Real-Time Updates:** In a collaborative environment, multi-threading can manage real-time updates efficiently. While one thread processes incoming changes from other users, another thread can update the local document view.
+
+**3\. Enhanced Collaboration:**
+
+* **Concurrency Control:** Multi-threading supports concurrent editing by multiple users. Threads can manage and resolve conflicts arising from simultaneous edits, ensuring that the document remains consistent and up-to-date.  
+* **Background Synchronization:** Threads can handle background synchronization tasks, such as merging changes from different users or periodically saving drafts, ensuring that collaboration is seamless and continuous.
+
+**4\. Scalability:**
+
+* **Handling Multiple Users:** As the number of users increases, multi-threading can scale the system’s ability to handle multiple simultaneous actions. Each user’s actions can be processed in separate threads, improving the system's overall scalability.
+
+**Class Diagram**:
+
+![Screenshot 2024-08-16 142447](https://github.com/user-attachments/assets/c9d2fb84-6673-4108-a18b-48ba1d4a3518)
+
+**Sequence Diagram**
+
+![Screenshot 2024-08-16 142548](https://github.com/user-attachments/assets/453f0655-7a17-428f-8c4c-30fdf1890c57)
