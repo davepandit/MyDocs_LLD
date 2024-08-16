@@ -460,3 +460,53 @@ public:
 };
 ```
 
+### **Conflict Detection and Resolution**
+
+**1\. Overview:** In a real-time collaborative document editing system, conflicts occur when multiple users perform operations (e.g., inserts, deletes) on the same document region simultaneously. Automatic conflict detection and resolution are essential for maintaining consistency and ensuring that all users see a coherent document state.
+
+**2\. Conflict Detection:**
+
+**2.1. Types of Conflicts:**
+
+* **Operational Conflicts:** Occur when operations affect the same part of the document. For example, two users might insert text at the same position or one user might delete text that another user is trying to insert.  
+* **State Conflicts:** Arise when the document's state is inconsistent due to concurrent updates. This can happen if operations are not applied in the correct order.
+
+**2.2. Conflict Detection Mechanisms:**
+
+* **Timestamp-Based Detection:** Use timestamps or logical clocks to order operations. Conflicts are detected if two operations are applied to the same position or region with overlapping timestamps.  
+* **Version Vectors:** Track the version of the document state for each user. Conflicts are detected when users’ version vectors diverge due to simultaneous operations.  
+* **Operational Transformation (OT) Algorithm:** In OT, conflicts are detected when operations overlap or affect the same document regions. The OT algorithm transforms and resolves these conflicts automatically.
+
+**3\. Conflict Resolution:**
+
+**3.1. Resolution Strategies:**
+
+* **Last-Write-Wins:** The most recent operation (based on timestamp) is preferred, and earlier conflicting operations are overridden.  
+* **Operational Transformation:** Adjusts the positions and effects of operations to account for concurrent changes. This involves transforming operations to be applied in a consistent manner, considering all concurrent changes.  
+* **Merge Strategies:** Automatically merge changes where possible, such as combining insertions or deletions if they do not conflict directly.
+
+**3.2. Conflict Resolution Process:**
+
+1. **Detect Conflicts:** Identify conflicting operations based on timestamps, version vectors, or overlapping document regions.  
+2. **Apply Transformation:** Use the OT algorithm or other transformation techniques to adjust the conflicting operations.  
+3. **Resolve Conflicts:** Apply the transformed operations to the document. For example, if two users insert text at the same position, adjust the positions of the inserts to maintain the correct order.  
+4. **Broadcast Resolutions:** Update all users with the resolved changes to ensure that everyone’s document view is consistent.  
+5. **Verify Consistency:** Periodically verify that the document state is consistent across all users and that no unresolved conflicts remain.
+
+**4\. Example:**
+
+**Conflict Detection Example:**
+
+* User A inserts "Hello" at position 5\.  
+* User B deletes text from position 4 to 6\.  
+* Conflict is detected because the insert and delete operations affect overlapping regions.
+
+**Conflict Resolution Example (Using OT):**
+
+* Transform the insert operation to account for the delete operation.  
+  * Insert operation position adjusted based on the delete operation's effect.  
+* Apply the transformed operations to the document:  
+  * The text insertion is adjusted to avoid the deleted region.  
+* Broadcast the resolved document state to all users.
+
+![Screenshot 2024-08-16 145027](https://github.com/user-attachments/assets/b83ad56d-023e-4d4d-8707-6d19f9873174)
