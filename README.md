@@ -257,8 +257,56 @@ User sessions are critical for managing which users are currently editing the do
 
 ```
 struct SessionManager {  
-    map\<int, UserSession\> sessions;  
+    map<int, UserSession> sessions;  
 };
 ```
 **Explanation**: The `SessionManager` structure is responsible for handling all active sessions. By using a map, we can quickly access any session by its `sessionId`. This data structure allows us to efficiently manage multiple users editing the same document simultaneously, ensuring that all their changes are tracked and conflicts are resolved.
 
+### **Communication Protocol Between Clients and the Server**
+
+#### **Overview**
+
+The Real-Time Collaborative Document Editing System requires a robust communication protocol to ensure that multiple users can edit documents simultaneously with high consistency and responsiveness. The protocol leverages WebSocket connections to maintain real-time, bi-directional communication between clients and the server.
+
+#### **Key Components**
+
+1. **Client-Server Architecture**  
+   * **Client**: The web application running in the user's browser. It captures user actions (such as text insertion, deletion, or cursor movement) and sends these actions to the server.  
+   * **Server**: The server processes incoming actions from clients, updates the document state, and broadcasts these changes back to all connected clients.  
+2. **WebSockets for Real-Time Communication**  
+   * **Persistent Connection**: WebSockets provide a continuous connection, enabling instant communication between the client and server.  
+   * **Event Handling**: User actions are transmitted as events (e.g., `textInsert`, `textDelete`) from the client to the server. The server then processes these events and broadcasts updates to other clients to maintain document synchronization.
+
+#### **Steps in the Communication Process**
+
+1. **Connection Establishment**  
+   * The client initiates a WebSocket connection with the server upon opening a document. This connection remains active throughout the session, allowing real-time updates.
+
+**Event Handling**
+
+* **Client-Side**: When a user makes an edit, the client sends the corresponding event to the server via WebSocket.  
+* **Server-Side**: The server processes the event, updates the document state, and broadcasts the update to all other clients.
+
+**Synchronization**
+
+* **Broadcasting**: After processing an event, the server broadcasts the updated document state to all connected clients.  
+* **Conflict Resolution**: If conflicting changes occur, the server resolves these conflicts using predefined rules or operational transformation techniques.
+
+**Disconnection and Reconnection**
+
+* If the WebSocket connection is lost, the client attempts to reconnect automatically. Upon reconnection, the server ensures the client receives the latest document state.
+
+#### **Error Handling**
+
+1. **Event Processing Failures**  
+   * If the server fails to process an event, it sends an error message back to the client, which then handles the error appropriately.  
+2. **Connection Failures**  
+   * The client should automatically attempt to reconnect if the WebSocket connection is lost.
+
+**Sequence Diagram**
+
+![Screenshot 2024-08-16 141654](https://github.com/user-attachments/assets/81e6ac48-2eaf-452a-a056-7f238ac0b8d3)
+
+**Class Diagram**:
+
+![Screenshot 2024-08-16 142015](https://github.com/user-attachments/assets/36503718-6a08-4546-b832-3b5599b64c30)
